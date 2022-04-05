@@ -6,22 +6,21 @@ authors = ["technillogue <technillogue@gmail.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.9"
-cudatoolkit = "11.0"
-torchvision= "0.8.1"
-numpy="1.19.2"
-albumentations = "0.4.3"
-opencv-python = "4.1.2.30"
-pudb = "2019.2"
-imageio = "2.9.0"
-imageio-ffmpeg = "0.4.2"
-pytorch-lightning = "1.4.2"
-omegaconf = "2.1.1"
-einops = "0.3.0"
-torch-fidelity = "0.3.0"
-transformers = "4.3.1"
 taming-transformers = {git="https://github.com/CompVis/taming-transformers", rev="master"}
 CLIP = {git="https://github.com/openai/CLIP", rev="main"}
-torch = "^1.11.0"
+scipy = "1.6.1"
+torchvision = "^0.12.0"
+numpy = "^1.22.3"
+albumentations = "^1.1.0"
+opencv-python = "^4.5.5"
+pudb = "^2022.1.1"
+imageio = "^2.16.1"
+imageio-ffmpeg = "^0.4.5"
+pytorch-lightning = "^1.6.0"
+omegaconf = "^2.1.1"
+einops = "^0.4.1"
+torch-fidelity = "^0.3.0"
+transformers = "^4.17.0"
 
 [tool.poetry.dev-dependencies]
 
