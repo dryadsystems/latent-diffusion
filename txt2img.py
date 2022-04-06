@@ -19,6 +19,12 @@ from ldm.models.diffusion.plms import PLMSSampler
 #         new_namespace.__dict__.update(other)
 
 
+def mk_slug(text: Union[str, list[str]]) -> str:
+    "strip offending charecters"
+    text = "".join(text).encode("ascii", errors="ignore").decode()
+    return "".join(c if (c.isalnum() or c in "._") else "_" for c in text)[:200]
+
+
 def load_model_from_config(config, ckpt, verbose=False):
     print(f"Loading model from {ckpt}")
     pl_sd = torch.load(ckpt, map_location="cpu")
@@ -183,7 +189,7 @@ def generate(args: argparse.Namespace) -> None:
 
     # to image
     grid = 255.0 * rearrange(grid, "c h w -> h w c").cpu().numpy()
-    output_path = os.path.join(outpath, f'{prompt.replace(" ", "-")}.png')
+    output_path = os.path.join(outpath, mk_slug(prompt) + ".png")
     Image.fromarray(grid.astype(np.uint8)).save(output_path)
 
     print(f"Your samples are ready and waiting four you here: \n{outpath} \nEnjoy.")
@@ -191,4 +197,4 @@ def generate(args: argparse.Namespace) -> None:
 
 
 if __name__ == "__main__":
-    main(get_args())
+    generate(get_args())
