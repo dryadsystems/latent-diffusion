@@ -1,17 +1,18 @@
-import argparse, os, sys, glob
-from typing import Any
-import torch
+import argparse
+import os
+from typing import Optional, Union
+
 import numpy as np
+import torch
+from einops import rearrange
 from omegaconf import OmegaConf
 from PIL import Image
-from tqdm import tqdm, trange
-from einops import rearrange
 from torchvision.utils import make_grid
+from tqdm import trange
 
-from ldm.util import instantiate_from_config
 from ldm.models.diffusion.ddim import DDIMSampler
 from ldm.models.diffusion.plms import PLMSSampler
-
+from ldm.util import instantiate_from_config
 
 # class BetterNamespace(argparse.Namespace):
 #     def with_update(self, other: dict[str, Any]) -> "BetterNamespace":
@@ -122,7 +123,7 @@ def get_args(args: Optional[dict] = None) -> argparse.Namespace:
     return parser.parse_args()
 
 
-def generate(args: argparse.Namespace) -> None:
+def generate(opt: argparse.Namespace) -> str:
     config = OmegaConf.load(
         "configs/latent-diffusion/txt2img-1p4B-eval.yaml"
     )  # TODO: Optionally download from same location as ckpt and chnage this logic
@@ -147,7 +148,7 @@ def generate(args: argparse.Namespace) -> None:
     os.makedirs(sample_path, exist_ok=True)
     base_count = len(os.listdir(sample_path))
 
-    all_samples = list()
+    all_samples = []
     with torch.no_grad():
         with model.ema_scope():
             uc = None

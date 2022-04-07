@@ -238,8 +238,6 @@ def handle_item(generator: Gen, prompt: Prompt) -> tuple[Gen, Result]:
     "finagle settings, generate it depending on settings, make a video if appropriate"
     args = txt2img.get_args({"prompt": prompt.prompt, **prompt.param_dict})
     logging.info(args)
-    path = f"output/{clipart.mk_slug(args.prompts)}"
-    # feedforward_path = ""
     start_time = time.time()
     path = txt2img.generate(args)
     # return the generator so it can be reused
