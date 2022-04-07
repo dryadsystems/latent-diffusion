@@ -29,9 +29,12 @@ twitter_api = t.TwitterAPI(
     api_version="1.1",
 )
 username = "@dreambs3"
-handler = logging.FileHandler("info.log")
-handler.setLevel("INFO")
+handler = logging.FileHandler("debug.log")
+handler.setLevel("DEBUG")
 logging.getLogger().addHandler(handler)
+stream_handler = logging.StreamHandler()
+handler.setLevel("DEBUG")
+logging.getLogger().addHandler(stream_handler)
 logging.info("starting")
 logging.debug("debug")
 tee = subprocess.Popen(["tee", "-a", "fulllog.txt"], stdin=subprocess.PIPE)
