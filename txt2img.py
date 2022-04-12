@@ -1,6 +1,9 @@
 import argparse
 import os
 from typing import Optional, Union
+import logging
+import traceback
+import sys
 
 import numpy as np
 import torch
@@ -26,9 +29,10 @@ def mk_slug(text: Union[str, list[str]]) -> str:
     return "".join(c if (c.isalnum() or c in "._") else "_" for c in text)[:200]
 
 
-def load_model_from_config(config, ckpt, verbose=False):
+def load_model_from_config(config, ckpt, verbose=True):
     print(f"Loading model from {ckpt}")
-    pl_sd = torch.load(ckpt, map_location="cpu")
+    device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
+    pl_sd = torch.load(ckpt, map_location=device)
     sd = pl_sd["state_dict"]
     model = instantiate_from_config(config.model)
     m, u = model.load_state_dict(sd, strict=False)
@@ -40,6 +44,7 @@ def load_model_from_config(config, ckpt, verbose=False):
         print(u)
 
     model.cuda()
+    logging.info(model)
     model.eval()
     return model
 
@@ -132,6 +137,7 @@ def generate(opt: argparse.Namespace) -> str:
     )  # TODO: check path
 
     device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
+    logging.info(device)
     model = model.to(device)
 
     if opt.plms:
@@ -155,6 +161,14 @@ def generate(opt: argparse.Namespace) -> str:
             if opt.scale != 1.0:
                 uc = model.get_learned_conditioning(opt.n_samples * [""])
             for n in trange(opt.n_iter, desc="Sampling"):
+                logging.info(n)
+                try:
+                    logging.info(torch.cuda.memory_stats(torch.device("cuda:0")))
+                except:  # pylint: disable=bare-except
+                    exception_traceback = "".join(
+                        traceback.format_exception(*sys.exc_info())
+                    )
+                    logging.info("error handling message %s", exception_traceback)
                 c = model.get_learned_conditioning(opt.n_samples * [prompt])
                 shape = [4, opt.H // 8, opt.W // 8]
                 samples_ddim, _ = sampler.sample(

@@ -21,7 +21,7 @@ from psycopg.rows import class_row
 import txt2img
 import txt2img as clipart
 import config
-
+# pass
 hostname = socket.gethostname()
 logging.getLogger().setLevel("DEBUG")
 twitter_api = t.TwitterAPI(
@@ -142,7 +142,7 @@ def get_prompt(conn: psycopg.Connection) -> Optional[Prompt]:
     maybe_id = conn.execute(
         """SELECT id FROM prompt_queue WHERE status='pending'
         AND selector=%s AND paid=%s ORDER BY signal_ts ASC LIMIT 1;""",
-        [os.getenv("SELECTOR"), bool(os.getenv("FREE"))],
+        [os.getenv("SELECTOR"), not bool(os.getenv("FREE"))],
     ).fetchone()
     if not maybe_id:
         return None
