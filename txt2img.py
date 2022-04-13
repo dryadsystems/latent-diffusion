@@ -124,8 +124,8 @@ def get_args(args: Optional[dict] = None) -> argparse.Namespace:
         fake_argv = [
             word for key, value in args.items() for word in [f"--{key}", value]
         ]
-        return parser.parse_args(fake_argv)
-    return parser.parse_args()
+        return parser.parse_known_args(fake_argv)[0]
+    return parser.parse_known_args()[0]
 
 
 def generate(opt: argparse.Namespace) -> str:
