@@ -200,6 +200,14 @@ def main() -> None:
                 )
                 logging.info("set done, poasting time: %s", time.time() - start_post)
                 backoff = 60
+            except RuntimeError as e:
+                if "out of memory" in str(e).lower():
+                    conn.execute(
+                        """UPDATE prompt_queue SET status='pending', assigned_at=null
+                        WHERE status='assigned' AND id=%s""", [prompt.prompt_id]
+                    )  # maybe this is a trigger
+                    admin("OOM")
+                    sys.exit(137)
             except Exception as e:  # pylint: disable=broad-except
                 logging.info("caught exception")
                 error_message = traceback.format_exc()
@@ -207,7 +215,7 @@ def main() -> None:
                     admin(repr(prompt))
                 logging.error(error_message)
                 admin(error_message)
-                if "out of memory" in str(e):
+                if "out of memory" in str(e).lower():
                     sys.exit(137)
                 conn.execute(
                     "UPDATE prompt_queue SET errors=errors+1 WHERE id=%s",
