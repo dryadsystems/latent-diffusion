@@ -11,7 +11,7 @@ import sys
 import time
 import traceback
 from pathlib import Path
-from typing import Optional
+from typing import Any, Optional
 
 import psycopg
 import requests
@@ -21,6 +21,7 @@ from psycopg.rows import class_row
 import txt2img
 import txt2img as clipart
 import config
+
 # pass
 hostname = socket.gethostname()
 logging.getLogger().setLevel("DEBUG")
@@ -103,6 +104,7 @@ def maybe_scale_in(conn: psycopg.Connection) -> None:
         )
         sys.exit(0)
 
+
 @dataclasses.dataclass
 class Prompt:
     "holds database result with prompt information"
@@ -149,7 +151,7 @@ def get_prompt(conn: psycopg.Connection) -> Optional[Prompt]:
     prompt_id = maybe_id[0]
     cursor = conn.cursor(row_factory=class_row(Prompt))
     logging.info("getting")
-    # mark it as assigned, returning only if it got updated 
+    # mark it as assigned, returning only if it got updated
     maybe_prompt = cursor.execute(
         "UPDATE prompt_queue SET status='assigned', assigned_at=now(), hostname=%s WHERE id = %s RETURNING id AS prompt_id, prompt, params, url;",
         [hostname, prompt_id],
@@ -187,7 +189,7 @@ def main() -> None:
                 params = [
                     result.loss,
                     result.elapsed,
-                    result.filepath,
+                    prompt.slug + ".png",
                     result.seed,
                     prompt.prompt_id,
                 ]
@@ -204,7 +206,8 @@ def main() -> None:
                 if "out of memory" in str(e).lower():
                     conn.execute(
                         """UPDATE prompt_queue SET status='pending', assigned_at=null
-                        WHERE status='assigned' AND id=%s""", [prompt.prompt_id]
+                        WHERE status='assigned' AND id=%s""",
+                        [prompt.prompt_id],
                     )  # maybe this is a trigger
                     admin("OOM")
                     sys.exit(137)
@@ -242,7 +245,7 @@ def main() -> None:
 # upload the file, id, and message to imogen based on the url. ideally retry on non-200
 # (imogen looks up destination, author, timestamp to send).
 # upload to twitter. if it fails, maybe log video size
-Gen = None #Optional[clipart.Generator]
+Gen = Any# Optional[clipart.Generator]
 
 
 def handle_item(generator: Gen, prompt: Prompt) -> tuple[Gen, Result]:

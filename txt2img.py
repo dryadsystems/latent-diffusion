@@ -1,6 +1,6 @@
 import argparse
 import os
-from typing import Optional, Union
+from typing import Any, Optional, Union
 import logging
 import traceback
 import sys
@@ -128,7 +128,7 @@ def get_args(args: Optional[dict] = None) -> argparse.Namespace:
     return parser.parse_known_args()[0]
 
 
-def generate(model, opt: argparse.Namespace) -> str:
+def generate(model: Any, opt: argparse.Namespace) -> tuple[Any, str]:
     if not model:
         config = OmegaConf.load(
             "configs/latent-diffusion/txt2img-1p4B-eval.yaml"
@@ -215,4 +215,4 @@ def generate(model, opt: argparse.Namespace) -> str:
 
 
 if __name__ == "__main__":
-    generate(get_args())
+    generate(None, get_args())
