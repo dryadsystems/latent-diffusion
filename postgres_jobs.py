@@ -250,9 +250,9 @@ def handle_item(generator: Gen, prompt: Prompt) -> tuple[Gen, Result]:
     args = txt2img.get_args({"prompt": prompt.prompt, **prompt.param_dict})
     logging.info(args)
     start_time = time.time()
-    path = txt2img.generate(args)
+    generator, path = txt2img.generate(generator, args)
     # return the generator so it can be reused
-    return None, Result(
+    return generator, Result(
         elapsed=round(time.time() - start_time),
         filepath=path,
         loss=-1,

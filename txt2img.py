@@ -128,17 +128,20 @@ def get_args(args: Optional[dict] = None) -> argparse.Namespace:
     return parser.parse_known_args()[0]
 
 
-def generate(opt: argparse.Namespace) -> str:
-    config = OmegaConf.load(
-        "configs/latent-diffusion/txt2img-1p4B-eval.yaml"
-    )  # TODO: Optionally download from same location as ckpt and chnage this logic
-    model = load_model_from_config(
-        config, "models/ldm/text2img-large/model.ckpt"
-    )  # TODO: check path
+def generate(model, opt: argparse.Namespace) -> str:
+    if not model:
+        config = OmegaConf.load(
+            "configs/latent-diffusion/txt2img-1p4B-eval.yaml"
+        )  # TODO: Optionally download from same location as ckpt and chnage this logic
+        model = load_model_from_config(
+            config, "models/ldm/text2img-large/model.ckpt"
+        )  # TODO: check path
 
-    device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
-    logging.info(device)
-    model = model.to(device)
+        device = (
+            torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
+        )
+        logging.info(device)
+        model = model.to(device)
 
     if opt.plms:
         sampler = PLMSSampler(model)
@@ -168,7 +171,7 @@ def generate(opt: argparse.Namespace) -> str:
                     exception_traceback = "".join(
                         traceback.format_exception(*sys.exc_info())
                     )
-                    logging.info("error handling message %s", exception_traceback)
+                    logging.info(exception_traceback)
                 c = model.get_learned_conditioning(opt.n_samples * [prompt])
                 shape = [4, opt.H // 8, opt.W // 8]
                 samples_ddim, _ = sampler.sample(
@@ -208,7 +211,7 @@ def generate(opt: argparse.Namespace) -> str:
     Image.fromarray(grid.astype(np.uint8)).save(output_path)
 
     print(f"Your samples are ready and waiting four you here: \n{outpath} \nEnjoy.")
-    return output_path
+    return model, output_path
 
 
 if __name__ == "__main__":

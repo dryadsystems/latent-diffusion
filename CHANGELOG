@@ -1,3 +1,5 @@
+0.0.8 reuse model
+0.0.7 free prompt on oom
 0.0.6 revert cu113, parse_known_args
 0.0.5 pytorch cu113
 0.0.4 add more logging
