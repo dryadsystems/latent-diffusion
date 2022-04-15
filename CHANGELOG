@@ -1,3 +1,4 @@
+0.0.9 don't error on non-string params
 0.0.8 reuse model
 0.0.7 free prompt on oom
 0.0.6 revert cu113, parse_known_args
