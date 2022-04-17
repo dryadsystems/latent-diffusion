@@ -33,7 +33,9 @@ username = "@dreambs3"
 handler = logging.FileHandler("debug.log")
 handler.setLevel("DEBUG")
 logging.getLogger().addHandler(handler)
+fmt = logging.Formatter("{levelname} {module}:{lineno}: {message}", style="{")
 stream_handler = logging.StreamHandler()
+stream_handler.setFormatter(fmt)
 handler.setLevel("DEBUG")
 logging.getLogger().addHandler(stream_handler)
 logging.info("starting")
@@ -138,7 +140,7 @@ def get_prompt(conn: psycopg.Connection) -> Optional[Prompt]:
     # mark prompts that have been assigned for more than 10 minutes as unassigned
     conn.execute(
         """UPDATE prompt_queue SET status='pending', assigned_at=null
-        WHERE status='assigned' AND assigned_at  < (now() - interval '10 minutes');"""
+        WHERE status='assigned' AND assigned_at  < (now() - interval '5 minutes');"""
     )  # maybe this is a trigger
     # try to select something
     maybe_id = conn.execute(
@@ -156,6 +158,8 @@ def get_prompt(conn: psycopg.Connection) -> Optional[Prompt]:
         "UPDATE prompt_queue SET status='assigned', assigned_at=now(), hostname=%s WHERE id = %s RETURNING id AS prompt_id, prompt, params, url;",
         [hostname, prompt_id],
     ).fetchone()
+    if not maybe_prompt:
+        logging.warning("couldn't actually get a prompt")
     logging.info("set assigned")
     return maybe_prompt
 
@@ -203,6 +207,9 @@ def main() -> None:
                 logging.info("set done, poasting time: %s", time.time() - start_post)
                 backoff = 60
             except RuntimeError as e:
+                logging.info("caught exception")
+                error_message = traceback.format_exc()
+                logging.error(error_message)
                 if "out of memory" in str(e).lower():
                     conn.execute(
                         """UPDATE prompt_queue SET status='pending', assigned_at=null
@@ -211,6 +218,9 @@ def main() -> None:
                     )  # maybe this is a trigger
                     admin("OOM")
                     sys.exit(137)
+                admin(error_message)
+                time.sleep(backoff)
+                backoff *= 1.5
             except Exception as e:  # pylint: disable=broad-except
                 logging.info("caught exception")
                 error_message = traceback.format_exc()
