@@ -43,7 +43,7 @@ def load_model_from_config(config, ckpt, verbose=True):
         print("unexpected keys:")
         print(u)
 
-    model.cuda()
+    model.to(device)
     logging.info(model)
     model.eval()
     return model
