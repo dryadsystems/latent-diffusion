@@ -44,7 +44,6 @@ def load_model_from_config(config, ckpt, verbose=True):
         print(u)
 
     model.to(device)
-    logging.info(model)
     model.eval()
     return model
 
@@ -73,13 +72,11 @@ def get_args(args: Optional[dict] = None) -> argparse.Namespace:
         default=200,
         help="number of ddim sampling steps",
     )
-
     parser.add_argument(
         "--plms",
-        action="store_true",
+        action="store_false",
         help="use plms sampling",
     )
-
     parser.add_argument(
         "--ddim_eta",
         type=float,
