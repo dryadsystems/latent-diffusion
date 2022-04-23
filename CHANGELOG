@@ -1,3 +1,4 @@
+0.0.13 handle prompts that are all unsafe charecters 
 0.0.12 add ckpt to dockerignore, download stuff at build time
 0.0.11 more logging, print runtime errors as well
 0.0.10 strip filepath

@@ -26,7 +26,7 @@ from ldm.util import instantiate_from_config
 def mk_slug(text: Union[str, list[str]]) -> str:
     "strip offending charecters"
     text = "".join(text).encode("ascii", errors="ignore").decode()
-    return "".join(c if (c.isalnum() or c in "._") else "_" for c in text)[:200]
+    return "".join(c if (c.isalnum() or c in "._") else "_" for c in text)[:200] or "empty_prompt"
 
 
 def load_model_from_config(config, ckpt, verbose=True):
