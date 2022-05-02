@@ -145,8 +145,8 @@ def get_prompt(conn: psycopg.Connection) -> Optional[Prompt]:
     # try to select something
     maybe_id = conn.execute(
         """SELECT id FROM prompt_queue WHERE status='pending'
-        AND selector=%s AND paid=%s ORDER BY signal_ts ASC LIMIT 1;""",
-        [os.getenv("SELECTOR"), not bool(os.getenv("FREE"))],
+        AND selector=%s ORDER BY signal_ts ASC LIMIT 1;""",
+        [os.getenv("SELECTOR")],
     ).fetchone()
     if not maybe_id:
         return None

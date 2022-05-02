@@ -1,3 +1,4 @@
+0.0.15 diffusion ignores paid status
 0.0.14 twitter feature flag
 0.0.13 handle prompts that are all unsafe charecters 
 0.0.12 add ckpt to dockerignore, download stuff at build time
