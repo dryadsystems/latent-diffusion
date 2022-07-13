@@ -21,5 +21,5 @@ COPY ./configs /app/configs
 COPY ./data /app/data 
 COPY ./ldm /app/ldm 
 COPY ./models /app/models 
-COPY ./txt2img.py ./postgres_jobs.py ./config.py /app/
-ENTRYPOINT ["/usr/bin/python3.9", "/app/postgres_jobs.py"]
+COPY ./txt2img.py ./pqueue.py ./config.py ./run.py /app/
+ENTRYPOINT ["/usr/bin/python3.9", "/app/run.py"]

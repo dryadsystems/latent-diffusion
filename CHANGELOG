@@ -1,3 +1,7 @@
+0.0.19 use run.py
+0.0.18 use pqueue
+0.0.17 fix timestamp
+0.0.16 timestamp in slug
 0.0.15 diffusion ignores paid status
 0.0.14 twitter feature flag
 0.0.13 handle prompts that are all unsafe charecters 
