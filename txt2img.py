@@ -4,7 +4,7 @@ from typing import Any, Optional, Union
 import logging
 import traceback
 import sys
-
+from datetime import datetime
 import numpy as np
 import torch
 from einops import rearrange
@@ -23,10 +23,14 @@ from ldm.util import instantiate_from_config
 #         new_namespace.__dict__.update(other)
 
 
-def mk_slug(text: Union[str, list[str]]) -> str:
+def mk_slug(text: Union[str, list[str]], time: str = "") -> str:
     "strip offending charecters"
-    text = "".join(text).encode("ascii", errors="ignore").decode()
-    return "".join(c if (c.isalnum() or c in "._") else "_" for c in text)[:200] or "empty_prompt"
+    really_time = time if time else datetime.now().isoformat()
+    text = really_time + "".join(text).encode("ascii", errors="ignore").decode()
+    return (
+        "".join(c if (c.isalnum() or c in "._") else "_" for c in text)[:200]
+        + hex(hash(text))[-4:]
+    )
 
 
 def load_model_from_config(config, ckpt, verbose=True):
@@ -118,6 +122,9 @@ def get_args(args: Optional[dict] = None) -> argparse.Namespace:
         help="unconditional guidance scale: eps = eps(x, empty) + scale * (eps(x, cond) - eps(x, empty))",
     )
     if args:
+        # check if the promt has dashes or something and parses okay
+        # otherwise, treat it a full prompt
+        # args["prompt"]
         fake_argv = [
             word for key, value in args.items() for word in [f"--{key}", str(value)]
         ]
