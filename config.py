@@ -1,3 +1,4 @@
+# Copyright (c) 2022 Sylvie Liberman
 # Copyright (c) 2022 Forest Contact
 import os
 import functools
