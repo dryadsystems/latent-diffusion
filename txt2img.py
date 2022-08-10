@@ -211,11 +211,8 @@ def generate(model: Any, opt: argparse.Namespace) -> tuple[Any, str]:
 
     # to image
     grid = 255.0 * rearrange(grid, "c h w -> h w c").cpu().numpy()
-    output_path = os.path.join(outpath, mk_slug(prompt) + ".png")
-    Image.fromarray(grid.astype(np.uint8)).save(output_path)
-
-    print(f"Your samples are ready and waiting four you here: \n{outpath} \nEnjoy.")
-    return model, output_path
+    # output_path = os.path.join(outpath, mk_slug(prompt) + ".png")
+    return model, [Image.fromarray(grid.astype(np.uint8))]
 
 
 if __name__ == "__main__":
