@@ -13,7 +13,7 @@ class DiffuseMaestro(Maestro):
 
     def handle_item(self, generator: Gen, prompt: Prompt) -> tuple[Gen, Result]:
         "finagle settings, generate it depending on settings, make a video if appropriate"
-        args = txt2img.get_args({"prompt": prompt.params["prompts"][0]["text"]}, **prompt.params)
+        args = txt2img.get_args({"prompt": prompt.params["prompts"][0]["text"], **prompt.params})
         logging.info(args)
         start_time = time.time()
         generator, images = txt2img.generate(generator, args)
