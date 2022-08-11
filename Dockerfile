@@ -24,5 +24,5 @@ COPY ./configs /app/configs
 COPY ./data /app/data 
 COPY ./ldm /app/ldm 
 COPY ./models /app/models 
-COPY ./txt2img.py ./pqueue.py ./config.py ./run.py /app/
+COPY ./txt2img.py ./config.py ./run.py /app/
 ENTRYPOINT ["/usr/bin/python3.10", "/app/run.py"]
