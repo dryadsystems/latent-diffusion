@@ -162,7 +162,7 @@ def generate(model: Any, opt: argparse.Namespace) -> tuple[Any, list[Image]]:
     base_count = len(os.listdir(sample_path))
 
     all_samples = []
-    outputs = []
+    images = []
     with torch.no_grad():
         with model.ema_scope():
             uc = None
