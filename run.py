@@ -15,6 +15,9 @@ class DiffuseMaestro(Maestro):
         "finagle settings, generate it depending on settings, make a video if appropriate"
         args = txt2img.get_args({"prompt": prompt.params["prompts"][0]["text"], **prompt.params})
         logging.info(args)
+        prompt.params["H"] = prompt.params["height"]
+        prompt.params["W"] = prompt.params["width"]
+        prompt.params["n_samples"] = prompt.params["num_images"]
         start_time = time.time()
         generator, images = txt2img.generate(generator, args)
         # return the generator so it can be reused
