@@ -1,5 +1,5 @@
 FROM appropriate/curl as model
-RUN curl -o model.ckpt -L --insecure http://ommer-lab.com/files/latent-diffusion/nitro/txt2img-f8-large/model.ckpt
+RUN curl -o model.ckpt -L https://r2-public-worker.drysys.workers.dev/text2img-large.ckpt
 
 FROM python:3.9 as libbuilder
 WORKDIR /app
