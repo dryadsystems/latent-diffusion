@@ -5,26 +5,24 @@ description = ""
 authors = ["various"]
 
 [tool.poetry.dependencies]
-python = "^3.9"
+python = ">=3.10,<3.12"
 #taming-transformers = {git="https://github.com/CompVis/taming-transformers", branch="master", subdirectory="taming"}
-CLIP = {git="https://github.com/openai/CLIP", rev="main"}
-scipy = "1.6.1"
-torchvision = "^0.12.0"
-numpy = "^1.22.3"
-albumentations = "^1.1.0"
-opencv-python = "^4.5.5"
-pudb = "^2022.1.1"
-imageio = "^2.16.1"
-imageio-ffmpeg = "^0.4.5"
-pytorch-lightning = "^1.6.0"
-omegaconf = "^2.1.1"
-einops = "^0.4.1"
-torch-fidelity = "^0.3.0"
-transformers = "^4.17.0"
 #torch = {url = "https://download.pytorch.org/whl/cu113/torch-1.11.0%2Bcu113-cp39-cp39-linux_x86_64.whl"}
-torch = "^1.11.0"
-psycopg = {extras = ["pool", "binary"], version = "^3.0.10"}
-TwitterAPI = "^2.7.12"
+albumentations = "^1.2.1"
+einops = "^0.4.1"
+imageio = "^2.21.1"
+imageio-ffmpeg = "^0.4.7"
+numpy = "^1.23.1"
+omegaconf = "^2.2.2"
+opencv-python = "^4.6.0"
+psycopg = {extras = ["pool", "binary"], version = "^3.0.16"}
+pytorch-lightning = "^1.7.1"
+scipy = "^1.9.0"
+torch = "^1.12.1"
+torch-fidelity = "^0.3.0"
+torchvision = "^0.13.1"
+transformers = "^4.21.1"
+TwitterAPI = "^2.7.13"
 
 [tool.poetry.dev-dependencies]
 

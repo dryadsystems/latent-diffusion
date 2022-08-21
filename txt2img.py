@@ -132,7 +132,7 @@ def get_args(args: Optional[dict] = None) -> argparse.Namespace:
     return parser.parse_known_args()[0]
 
 
-def generate(model: Any, opt: argparse.Namespace) -> tuple[Any, str]:
+def generate(model: Any, opt: argparse.Namespace) -> tuple[Any, list[Image]]:
     if not model:
         config = OmegaConf.load(
             "configs/latent-diffusion/txt2img-1p4B-eval.yaml"
@@ -162,6 +162,7 @@ def generate(model: Any, opt: argparse.Namespace) -> tuple[Any, str]:
     base_count = len(os.listdir(sample_path))
 
     all_samples = []
+    images = []
     with torch.no_grad():
         with model.ema_scope():
             uc = None
@@ -198,24 +199,11 @@ def generate(model: Any, opt: argparse.Namespace) -> tuple[Any, str]:
                     x_sample = 255.0 * rearrange(
                         x_sample.cpu().numpy(), "c h w -> h w c"
                     )
-                    Image.fromarray(x_sample.astype(np.uint8)).save(
-                        os.path.join(sample_path, f"{base_count:04}.png")
-                    )
+                    images.append(Image.fromarray(x_sample.astype(np.uint8)))
                     base_count += 1
                 all_samples.append(x_samples_ddim)
 
-    # additionally, save as grid
-    grid = torch.stack(all_samples, 0)
-    grid = rearrange(grid, "n b c h w -> (n b) c h w")
-    grid = make_grid(grid, nrow=opt.n_samples)
-
-    # to image
-    grid = 255.0 * rearrange(grid, "c h w -> h w c").cpu().numpy()
-    output_path = os.path.join(outpath, mk_slug(prompt) + ".png")
-    Image.fromarray(grid.astype(np.uint8)).save(output_path)
-
-    print(f"Your samples are ready and waiting four you here: \n{outpath} \nEnjoy.")
-    return model, output_path
+    return model, images
 
 
 if __name__ == "__main__":
