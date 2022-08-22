@@ -7,7 +7,7 @@ import txt2img
 
 class DiffuseMaestro(Maestro):
     model = "diffuse"
-    version = "0.0.20"
+    version = "0.0.24"
 
     def create_generator(self) -> None:
         pass
