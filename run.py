@@ -4,6 +4,7 @@ import time
 import logging
 import txt2img
 
+#
 
 class DiffuseMaestro(Maestro):
     model = "diffuse"
