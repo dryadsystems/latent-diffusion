@@ -17,4 +17,4 @@ jobs:
         with:
           url: https://gnomeirograf.fly.dev/prompt
           method: POST
-          body: '{"callbacks":{},"prompt": "", "model": "gnometown", "params": {"model":"verdant","directory":"latent-diffusion","commit": "${{ .github.sha }}"}, "username": "gnome"}'
+          body: '{"callbacks":{},"prompt": "", "model": "gnometown", "params": {"model":"diffuse","directory":"latent-diffusion","commit": "${{ .github.sha }}"}, "username": "gnome"}'
