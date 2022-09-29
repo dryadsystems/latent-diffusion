@@ -14,15 +14,21 @@ WORKDIR /app/
 COPY ./pyproject.toml /app/
 RUN VIRTUAL_ENV=/app/venv poetry install 
 
+FROM timberio/vector:nightly-2022-09-01-debian as vector
+
 FROM python:3.10
 WORKDIR /app
 RUN git clone https://github.com/CompVis/taming-transformers && mv taming-transformers/taming .
 COPY --from=model /model.ckpt /app/models/ldm/text2img-large/model.ckpt 
 COPY --from=libbuilder /app/venv/lib/python3.10/site-packages /app/
+COPY --from=vector /usr/bin/vector /src/pqueue/vector
 COPY ./configs /app/configs 
 COPY ./data /app/data 
 COPY ./ldm /app/ldm 
 COPY ./models /app/models 
 COPY --from=pqueue /src/pqueue /app/
-COPY ./txt2img.py ./run.py /app/
-ENTRYPOINT ["/usr/local/bin/python3.10", "/app/run.py"]
+COPY ./txt2img.py ./brrr.py /app/
+ARG MODEL_VERSION
+ENV MODEL_VERSION=$MODEL_VERSION
+ENV MODEL="diffuse"
+ENTRYPOINT ["/usr/local/bin/python3.10", "/app/pqueue.py"]

@@ -132,7 +132,7 @@ def get_args(args: Optional[dict] = None) -> argparse.Namespace:
     return parser.parse_known_args()[0]
 
 
-def generate(model: Any, opt: argparse.Namespace) -> tuple[Any, list[Image]]:
+def generate(model: Any, opt: argparse.Namespace) -> list[Image]:
     if not model:
         config = OmegaConf.load(
             "configs/latent-diffusion/txt2img-1p4B-eval.yaml"
@@ -203,7 +203,7 @@ def generate(model: Any, opt: argparse.Namespace) -> tuple[Any, list[Image]]:
                     base_count += 1
                 all_samples.append(x_samples_ddim)
 
-    return model, images
+    return images
 
 
 if __name__ == "__main__":
