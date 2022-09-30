@@ -20,7 +20,7 @@ WORKDIR /app
 RUN git clone https://github.com/CompVis/taming-transformers && mv taming-transformers/taming .
 COPY --from=model /model.ckpt /app/models/ldm/text2img-large/model.ckpt 
 COPY --from=libbuilder /app/venv/lib/python3.10/site-packages /app/
-COPY --from=vector /usr/bin/vector /src/app/
+COPY --from=vector /usr/bin/vector /app/vector
 COPY ./configs /app/configs 
 COPY ./data /app/data 
 COPY ./ldm /app/ldm 
