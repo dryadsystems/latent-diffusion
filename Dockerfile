@@ -2,7 +2,6 @@ ARG PQUEUE_VERSION
 FROM pqueue:$PQUEUE_VERSION as pqueue
 
 FROM appropriate/curl as model
-ENV CACHE_BURST=1
 RUN curl -o model.ckpt -L https://r2-public-worker.drysys.workers.dev/text2img-large.ckpt
 
 FROM python:3.10 as libbuilder
