@@ -33,10 +33,10 @@ def mk_slug(text: Union[str, list[str]], time: str = "") -> str:
     )
 
 
-def load_model_from_config(config, ckpt, verbose=True):
+def load_model_from_config(config, ckpt, verbose=True): # type: ignore
     print(f"Loading model from {ckpt}")
     device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
-    pl_sd = torch.load(ckpt, map_location=device)
+    pl_sd = torch.load(ckpt, map_location=device) # type: ignore
     sd = pl_sd["state_dict"]
     model = instantiate_from_config(config.model)
     m, u = model.load_state_dict(sd, strict=False)
@@ -137,7 +137,7 @@ def generate(model: Any, opt: argparse.Namespace) -> list[Image]:
         config = OmegaConf.load(
             "configs/latent-diffusion/txt2img-1p4B-eval.yaml"
         )  # TODO: Optionally download from same location as ckpt and chnage this logic
-        model = load_model_from_config(
+        model = load_model_from_config( # type: ignore
             config, "models/ldm/text2img-large/model.ckpt"
         )  # TODO: check path
 
