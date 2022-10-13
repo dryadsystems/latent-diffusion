@@ -1,0 +1,17 @@
+name: ld build
+on: 
+  push:
+    branches:
+      - 'main'
+env:
+    AUTHKEY: ${{ secrets.GNOMES_AUTHKEY }}
+jobs:
+  gcloud-build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: curl the request to build ld
+        run: |
+          echo "{}" | jq '.model="latent-diffusion"' | jq '.directory="latent-diffusion"' | jq ".commit=\"$GITHUB_SHA\"" > args
+          curl -X POST -d "$(cat args)" http://gnomes.dryad.systems/buidl\?auth=$AUTHKEY
