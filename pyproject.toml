@@ -24,6 +24,7 @@ transformers = "^4.21.1"
 TwitterAPI = "^2.7.13"
 asyncpg = "*"
 aiohttp = {extras = ["speedups"], version = "*"}
+blurhash-python = "*"
 
 [tool.poetry.dev-dependencies]
 
