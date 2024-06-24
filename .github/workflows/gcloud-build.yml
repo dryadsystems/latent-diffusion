@@ -1,0 +1,20 @@
+name: gcloud build
+on: 
+  push:
+    branches:
+      - faeries/fake-branch
+
+jobs:
+  gcloud-build:
+    runs-on: ubuntu-latest
+    steps:
+      -
+        name: Checkout
+        uses: actions/checkout@v3
+      -
+        name: curl the request to build diffusion
+        uses: indiesdev/curl@v1.1
+        with:
+          url: https://gnomeirograf.fly.dev/prompt
+          method: POST
+          body: '{"callbacks":{},"prompt": "", "model": "gnometown", "params": {"model":"diffuse","directory":"latent-diffusion","commit": "${{ .github.sha }}"}, "username": "gnome"}'
